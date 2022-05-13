@@ -71,7 +71,7 @@ queryInstalled() {
 approveForMyOrg3() {
     setGlobalsForPeer0Org3
 
-    peer lifecycle chaincode approveformyorg -o 3.137.192.227:7050 \
+    peer lifecycle chaincode approveformyorg -o 3.17.189.235:7050 \
         --ordererTLSHostnameOverride orderer.example.com --tls $CORE_PEER_TLS_ENABLED \
         --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME} \
         --version ${VERSION} --init-required --package-id ${PACKAGE_ID} \
