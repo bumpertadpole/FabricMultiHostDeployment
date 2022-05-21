@@ -72,7 +72,7 @@ approveForMyOrg1() {
     setGlobalsForPeer0Org1
     # set -x
     # Replace localhost with your orderer's vm IP address
-    peer lifecycle chaincode approveformyorg -o 52.14.146.132:7050 \
+    peer lifecycle chaincode approveformyorg -o 3.138.245.211:7050 \
         --ordererTLSHostnameOverride orderer.example.com --tls \
         --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${VERSION} \
         --init-required --package-id ${PACKAGE_ID} \
