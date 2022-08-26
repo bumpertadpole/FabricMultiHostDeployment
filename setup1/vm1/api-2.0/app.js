@@ -12,7 +12,7 @@ const bearerToken = require('express-bearer-token');
 const cors = require('cors');
 const constants = require('./config/constants.json')
 const mqtt = require('mqtt');
-const client = mqtt.connect('mqtt://100.26.43.95:1234');
+const client = mqtt.connect('mqtt://3.22.60.209:1234');
 
 const host = process.env.HOST || constants.host;
 const port = process.env.PORT || constants.port;
@@ -141,8 +141,6 @@ app.post('/register', async function (req, res) {
         orgName: orgName
     }, app.get('secret'));
 
-    console.log(token)
-
     let response = await helper.registerAndGerSecret(username, orgName);
 
     logger.debug('-- returned from registering the username %s for organization %s', username, orgName);
@@ -154,7 +152,6 @@ app.post('/register', async function (req, res) {
         logger.debug('Failed to register the username %s for organization %s with::%s', username, orgName, response);
         res.json({ success: false, message: response });
     }
-
 });
 
 // Login and get jwt
@@ -194,14 +191,12 @@ app.post('/users/login', async function (req, res) {
 app.post('/channels/:channelName/chaincodes/:chaincodeName', async function (req, res) {
     try {
         logger.debug('==================== INVOKE ON CHAINCODE ==================');
-        var peers = req.body.peers;
         var chaincodeName = req.params.chaincodeName;
         var channelName = req.params.channelName;
         var fcn = req.body.fcn;
         var args = req.body.args;
         var transient = req.body.transient;
         var topic = 'fabric'
-        var mesaj1 ;
 
         console.log(`Transient data is ;${transient}`)
         logger.debug('channelName  : ' + channelName);
@@ -234,13 +229,6 @@ app.post('/channels/:channelName/chaincodes/:chaincodeName', async function (req
             var mesaj= JSON.parse(sensor)
             client.publish(topic, JSON.stringify(mesaj))
         }
-
-
-        
-        /*const str = CircularJSON.stringify(req);
-        var mesaj= JSON.parse(str) //JSON.stringify(mesaj)*/
-
-//channelName, chaincodeName, fcn, args, req.username, req.orgname, transient
         let message = await invoke.invokeTransaction();
         console.log(`message result is : ${message}`)
 
@@ -270,7 +258,6 @@ app.get('/channels/:channelName/chaincodes/:chaincodeName', async function (req,
         console.log(`chaincode name is :${chaincodeName}`)
         let args = req.query.args;
         let fcn = req.query.fcn;
-        let peer = req.query.peer;
 
         logger.debug('channelName : ' + channelName);
         logger.debug('chaincodeName : ' + chaincodeName);

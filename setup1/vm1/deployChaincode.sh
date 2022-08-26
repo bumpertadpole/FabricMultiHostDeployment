@@ -52,10 +52,8 @@ installChaincode() {
     setGlobalsForPeer0Org1
     peer lifecycle chaincode install ${CC_NAME}.tar.gz
     echo "===================== Chaincode is installed on peer0.org1 ===================== "
-
 }
-
-# installChaincode
+installChaincode
 
 queryInstalled() {
     setGlobalsForPeer0Org1
@@ -65,26 +63,20 @@ queryInstalled() {
     echo PackageID is ${PACKAGE_ID}
     echo "===================== Query installed successful on peer0.org1 on channel ===================== "
 }
-
-# queryInstalled
+queryInstalled
 
 approveForMyOrg1() {
     setGlobalsForPeer0Org1
-    # set -x
-    # Replace localhost with your orderer's vm IP address
-    peer lifecycle chaincode approveformyorg -o 54.91.193.18:7050 \
+    peer lifecycle chaincode approveformyorg -o 18.223.160.117:7050 \
         --ordererTLSHostnameOverride orderer.example.com --tls \
         --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${VERSION} \
         --init-required --package-id ${PACKAGE_ID} \
         --sequence ${VERSION}
-    # set +x
 
     echo "===================== chaincode approved from org 1 ===================== "
-
 }
-
-# queryInstalled
-# approveForMyOrg1
+queryInstalled
+approveForMyOrg1
 
 checkCommitReadyness() {
     setGlobalsForPeer0Org1

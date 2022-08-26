@@ -160,38 +160,34 @@ func (s *SmartContract) changeSensorData(APIstub shim.ChaincodeStubInterface, ar
 }
 
 func (s *SmartContract) createProduct(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	if len(args) != 4 {
+		return shim.Error("Incorrect number of arguments. Expecting 4")
+	}
 
-if len(args) != 4 {
-	return shim.Error("Incorrect number of arguments. Expecting 4")
-}
+	dt:= time.Now()
+	var product = Product{ProductName: args[1], ProductClass: args[2], Producer: args[3]}
+	product.Status= "Uretildi"
+	product.ProductionDate=dt.Format("01-02-2006 15:04:05")
+	product.ProducerCheckoutDate="n/a"
+	product.Transporter="n/a" 
+	product.TransporterEntryDate="n/a"
+	product.TransporterCheckoutDate="n/a"
+	product.Warehouse="n/a"
+	product.WarehouseEntryDate="n/a"
+	product.WarehouseCheckoutDate= "n/a"
 
-dt:= time.Now()
+	productAsBytes, _ := json.Marshal(product)
+	APIstub.PutState(args[0], productAsBytes)
 
-var product = Product{ProductName: args[1], ProductClass: args[2], Producer: args[3]}
+	indexName := "status~key"
+	colorNameIndexKey, err := APIstub.CreateCompositeKey(indexName, []string{product.Status, args[0]})
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	value := []byte{0x00}
+	APIstub.PutState(colorNameIndexKey, value)
 
-product.Status= "Uretildi"
-product.ProductionDate=dt.Format("01-02-2006 15:04:05")
-product.ProducerCheckoutDate="n/a"
-product.Transporter="n/a" 
-product.TransporterEntryDate="n/a"
-product.TransporterCheckoutDate="n/a"
-product.Warehouse="n/a"
-product.WarehouseEntryDate="n/a"
-product.WarehouseCheckoutDate= "n/a"
-
-productAsBytes, _ := json.Marshal(product)
-APIstub.PutState(args[0], productAsBytes)
-
-indexName := "status~key"
-colorNameIndexKey, err := APIstub.CreateCompositeKey(indexName, []string{product.Status, args[0]})
-if err != nil {
-	return shim.Error(err.Error())
-}
-value := []byte{0x00}
-APIstub.PutState(colorNameIndexKey, value)
-
-return shim.Success(productAsBytes)
-
+	return shim.Success(productAsBytes)
 }
 
 func (S *SmartContract) queryProductByStatus(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
